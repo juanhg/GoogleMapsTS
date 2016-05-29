@@ -4,7 +4,7 @@ var myFirstModule;
         function Startup() {
         }
         Startup.hello = function () {
-            return "Hello World!!!!";
+            return "Hello World!!";
         };
         return Startup;
     }());

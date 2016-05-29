@@ -1,7 +1,7 @@
 module myFirstModule {
     export class Startup {
         public static hello(): string {
-            return "Hello World!!!!";
+            return "Hello World!!";
         }
     };
 
