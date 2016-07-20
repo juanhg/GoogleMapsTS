@@ -44,20 +44,72 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	var myFirstModule;
-	(function (myFirstModule) {
-	    var Startup = (function () {
-	        function Startup() {
+	/// <reference path="../typings/google.maps.d.ts" />
+	var GoogleMapsTS;
+	(function (GoogleMapsTS) {
+	    var GoogleMapLoader = (function () {
+	        function GoogleMapLoader() {
 	        }
-	        Startup.hello = function () {
-	            return "Hello World!!!!";
+	        GoogleMapLoader.LoadAPI = function (callback) {
+	            var script = document.createElement("script");
+	            script.type = "text/javascript";
+	            document.getElementsByTagName("head")[0].appendChild(script);
+	            script.src = 'http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=' + callback;
 	        };
-	        return Startup;
+	        return GoogleMapLoader;
 	    }());
-	    myFirstModule.Startup = Startup;
+	    var Location = (function () {
+	        function Location(name, lat, lng) {
+	            this.name = name;
+	            this.lat = lat;
+	            this.lng = lng;
+	        }
+	        return Location;
+	    }());
+	    GoogleMapsTS.Location = Location;
 	    ;
-	    document.body.innerHTML = Startup.hello();
-	})(myFirstModule || (myFirstModule = {}));
+	    var Route = (function () {
+	        function Route() {
+	            this.locations = new Array(2);
+	        }
+	        Route.prototype.count = function () {
+	            return this.locations.length;
+	        };
+	        Route.prototype.getFromLocation = function () {
+	            return this.locations[0];
+	        };
+	        Route.prototype.getToLocation = function () {
+	            var toIndex = this.count() - 1;
+	            return this.locations[toIndex];
+	        };
+	        Route.prototype.getViaLocations = function () {
+	            return [];
+	        };
+	        return Route;
+	    }());
+	    GoogleMapsTS.Route = Route;
+	    ;
+	    var Map = (function () {
+	        function Map(mapDiv) {
+	            this.callbackName = 'onGoogleMapReady';
+	            this.mapDiv = mapDiv;
+	            window[this.callbackName] = this.onGoogleMapReady.bind(this);
+	            GoogleMapLoader.LoadAPI(this.callbackName);
+	        }
+	        Map.prototype.onGoogleMapReady = function () {
+	            var map = new google.maps.Map(this.mapDiv, {
+	                center: { lat: -34.397, lng: 150.644 },
+	                zoom: 8
+	            });
+	        };
+	        return Map;
+	    }());
+	    GoogleMapsTS.Map = Map;
+	    window.onload = function () {
+	        var mapDiv = document.getElementById('map');
+	        var map = new Map(mapDiv);
+	    };
+	})(GoogleMapsTS || (GoogleMapsTS = {}));
 
 
 /***/ }
