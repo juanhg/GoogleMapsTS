@@ -1,0 +1,43 @@
+.places-search-box{
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  text-overflow: ellipsis;
+  margin-left: 20px;
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 3px;
+  width: 200px;
+}
+
+.search-container{
+    float: left;
+    background-color: dodgerblue;
+    width: 260px;
+}
+
+.map-container{
+    float: left;
+    flex-grow: 1;
+}
+
+.main-container{
+    display: flex;
+    flex-direction: row;
+    height: 800px;
+}
+
+.shape-block {
+    height: 700px;
+    position: relative;
+}
+
+.shape-block img  {
+    display: block;
+    max-width: 80%;
+    position: absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+}

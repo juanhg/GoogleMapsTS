@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html>
-    <head><title>Google Maps TS</title></head>
-    <body>
-        <input id="fromInput" class="controls" type="text" placeholder="Search Box">
-        <input id="toInput" class="controls" type="text" placeholder="Search Box">
-        <div id="map"  style="height:800px; width: 1000px;"></div>
-        <script src="../build/app.js"></script>
-    </body>
+
+<head>
+    <title>Google Maps TS</title>
+    <link rel="stylesheet" type="text/css" href="../styles/app.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="search-container">
+            <div>
+                <input id="fromInput" class="places-search-box" type="text" placeholder="From location">
+            </div>
+            <div>
+                <input id="toInput" class="places-search-box" type="text" placeholder="To location">
+            </div>
+            <div class="shape-block">
+                <img class="shape" src="../resources/img/figura.png" align="bottom">
+            </div>
+        </div>
+        <div id="map" class="map-container"></div>
+    </div>
+    <script src="../build/app.js"></script>
+</body>
+
 </html>
