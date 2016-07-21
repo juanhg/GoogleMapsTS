@@ -52,19 +52,21 @@
 	var GoogleMapLoader_1 = __webpack_require__(4);
 	var GoogleMapsTS;
 	(function (GoogleMapsTS) {
+	    var map;
+	    var fromSearcher;
+	    var toSearcher;
+	    var onPlacesChanged = function (places, searchBox, searchBoxElement) {
+	        map.updateRoute();
+	    };
 	    window.onload = function () {
 	        var callbackName = 'onGoogleMapAPIReady';
 	        window[callbackName] = function () {
 	            var mapDiv = document.getElementById('map');
 	            var fromInput = document.getElementById('fromInput');
 	            var toInput = document.getElementById('toInput');
-	            var onPlacesChanged = function (places, searchBox, searchBoxElement) {
-	                console.log('Places: ' + places);
-	                console.log(searchBox);
-	            };
-	            this.map = new Map_ts_1.Map(mapDiv);
-	            this.fromSearcher = new PlacesSearcher_1.PlacesSearcher(fromInput, onPlacesChanged);
-	            this.toSearcher = new PlacesSearcher_1.PlacesSearcher(toInput, onPlacesChanged);
+	            map = new Map_ts_1.Map(mapDiv);
+	            this.fromSearcher = new PlacesSearcher_1.PlacesSearcher(fromInput, onPlacesChanged.bind(this));
+	            this.toSearcher = new PlacesSearcher_1.PlacesSearcher(toInput, onPlacesChanged.bind(this));
 	        };
 	        GoogleMapLoader_1.GoogleMapLoader.LoadAPI(callbackName);
 	    };
@@ -81,14 +83,40 @@
 	"use strict";
 	var Route_ts_1 = __webpack_require__(2);
 	var Map = (function () {
-	    function Map(mapDiv) {
+	    function Map(mapDiv, fromSearchElement, toSearchElement) {
+	        this.directionRendererOptions = {
+	            draggable: true
+	        };
 	        this.mapDiv = mapDiv;
+	        this.fromSearchElement = fromSearchElement ? fromSearchElement : document.getElementById('fromInput');
+	        this.toSearchElement = toSearchElement ? toSearchElement : document.getElementById('toInput');
 	        this.route = new Route_ts_1.Route();
-	        var map = new google.maps.Map(this.mapDiv, {
+	        this.directionRendererOptions = {
+	            draggable: true
+	        };
+	        this.map = new google.maps.Map(this.mapDiv, {
 	            center: { lat: -34.397, lng: 150.644 },
 	            zoom: 8
 	        });
+	        this.directionRendererOptions.map = this.map;
+	        this.directionRenderer = new google.maps.DirectionsRenderer(this.directionRendererOptions);
+	        this.directionsService = new google.maps.DirectionsService();
 	    }
+	    Map.prototype.updateDirectionRenderer = function () {
+	        this.directionRenderer.setMap(null);
+	        this.directionRenderer = new google.maps.DirectionsRenderer(this.directionRendererOptions);
+	    };
+	    Map.prototype.updateRoute = function () {
+	        var me = this;
+	        this.directionsService.route({
+	            origin: me.fromSearchElement.value,
+	            destination: me.toSearchElement.value,
+	            travelMode: google.maps.TravelMode.DRIVING
+	        }, function (response, status) {
+	            if (status === google.maps.DirectionsStatus.OK)
+	                me.directionRenderer.setDirections(response);
+	        });
+	    };
 	    return Map;
 	}());
 	exports.Map = Map;

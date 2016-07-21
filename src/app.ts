@@ -7,6 +7,17 @@ import {GoogleMapLoader} from './map/GoogleMapLoader';
 
 namespace GoogleMapsTS {
 
+    var map: Map;
+    var fromSearcher: PlacesSearcher;
+    var toSearcher: PlacesSearcher;
+    
+    var onPlacesChanged = function (places: google.maps.places.PlaceResult[],
+        searchBox: PlacesSearcher,
+        searchBoxElement: HTMLInputElement) {
+        map.updateRoute();
+    };
+
+
     window.onload = function () {
         var callbackName = 'onGoogleMapAPIReady';
 
@@ -15,16 +26,9 @@ namespace GoogleMapsTS {
             var fromInput = <HTMLInputElement>document.getElementById('fromInput');
             var toInput = <HTMLInputElement>document.getElementById('toInput');
 
-            var onPlacesChanged = function(places: google.maps.places.PlaceResult[], 
-                                           searchBox: PlacesSearcher,
-                                           searchBoxElement: HTMLInputElement){
-                console.log('Places: ' + places);
-                console.log(searchBox);
-            };
-            
-            this.map = new Map(mapDiv);
-            this.fromSearcher = new PlacesSearcher(fromInput, onPlacesChanged);
-            this.toSearcher = new PlacesSearcher(toInput, onPlacesChanged);
+            map = new Map(mapDiv);
+            this.fromSearcher = new PlacesSearcher(fromInput, onPlacesChanged.bind(this));
+            this.toSearcher = new PlacesSearcher(toInput, onPlacesChanged.bind(this));
         };
 
         GoogleMapLoader.LoadAPI(callbackName);
